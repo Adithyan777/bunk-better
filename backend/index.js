@@ -17,7 +17,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const mongoURI = process.env.MONGO_URI;
 
 // Connect to MongoDB using Mongoose
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(mongoURI);
 
 const userSchema = new mongoose.Schema({
     firstName: { type: String, required: true },
