@@ -14,9 +14,7 @@ dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // Connection URL for your MongoDB database
-const db_name = process.env.db_name;
-// Using template literal
-const mongoURI = `mongodb+srv://adithynkrshna:qwerty123@cluster0.faf445c.mongodb.net/${db_name}?retryWrites=true&w=majority&appName=Cluster0`;
+const mongoURI = process.env.MONGO_URI;
 
 // Connect to MongoDB using Mongoose
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
