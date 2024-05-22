@@ -39,6 +39,7 @@ export default function SignUpCard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form submitted with data:", formData); // Debugging log
+    console.log("Base URL: "+ baseUrl)
 
     try {
       const response = await fetch(`${baseUrl}/register`, {
