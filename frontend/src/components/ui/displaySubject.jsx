@@ -59,7 +59,7 @@ export default function displaySubject() {
         const baseUrl = import.meta.env.VITE_BACKEND_URL;
 
         const [subjectsResponse, userResponse] = await Promise.all([
-          fetch(`${baseUrl}/subjectsByday`, {
+          fetch(`https://${baseUrl}/subjectsByday`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -67,7 +67,7 @@ export default function displaySubject() {
               "day": today
             }
           }),
-          fetch(`${baseUrl}/userData`, {
+          fetch(`https://${baseUrl}/userData`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -140,7 +140,7 @@ export default function displaySubject() {
 
     try {
       const baseUrl = import.meta.env.VITE_BACKEND_URL;
-      const response = await fetch(`${baseUrl}/updateSubject`, {
+      const response = await fetch(`https://${baseUrl}/updateSubject`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

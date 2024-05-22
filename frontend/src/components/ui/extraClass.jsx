@@ -39,7 +39,7 @@ export function ExtraClass(props) {
       setIsLoading(true)
       const fetchSubjects = async () => {
         try {
-          const response = await fetch(`${baseUrl}/subjects`, {
+          const response = await fetch(`https://${baseUrl}/subjects`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -79,7 +79,7 @@ export function ExtraClass(props) {
   
       try {
         if(selectedSubject && code){
-            const response = await fetch(`${baseUrl}/updateAttendance`, {
+            const response = await fetch(`https://${baseUrl}/updateAttendance`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',

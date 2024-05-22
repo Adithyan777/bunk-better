@@ -42,7 +42,7 @@ export default function SignUpCard() {
     console.log("Base URL: "+ baseUrl)
 
     try {
-      const response = await fetch(`${baseUrl}/register`, {
+      const response = await fetch(`https://${baseUrl}/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

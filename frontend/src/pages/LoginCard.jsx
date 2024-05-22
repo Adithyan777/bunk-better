@@ -16,7 +16,7 @@ export default function Component() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch(`${baseUrl}/login`, {
+      const response = await fetch(`https://${baseUrl}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -29,7 +29,7 @@ function EachDayTimeTable(props) {
     const fetchSubjects = async () => {
       try {
         const baseUrl = import.meta.env.VITE_BACKEND_URL;
-        const response = await fetch(`${baseUrl}/subjects`, {
+        const response = await fetch(`https://${baseUrl}/subjects`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -59,7 +59,7 @@ function EachDayTimeTable(props) {
     const fetchTimetable = async () => {
       try {
         const baseUrl = import.meta.env.VITE_BACKEND_URL;
-        const response = await fetch(`${baseUrl}/subjectsByDay`, {
+        const response = await fetch(`https://${baseUrl}/subjectsByDay`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -123,7 +123,7 @@ function EachDayTimeTable(props) {
     console.log(selectedSubjects);
     try {
       const baseUrl = import.meta.env.VITE_BACKEND_URL;
-      const response = await fetch(`${baseUrl}/insertTimetable`, {
+      const response = await fetch(`https://${baseUrl}/insertTimetable`, {
         method: isDefined ? 'PUT' : 'POST',
         headers: {
           'Content-Type': 'application/json',

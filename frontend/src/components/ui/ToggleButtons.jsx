@@ -71,7 +71,7 @@ export default function ToggleButtons({ subjectId, attended, missed, total, onUp
 
   const handleAttendanceUpdate = async (newAttended, newMissed, newTotal) => {
     try {
-      const response = await fetch(`${baseUrl}/updateSubject`, {
+      const response = await fetch(`https://${baseUrl}/updateSubject`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

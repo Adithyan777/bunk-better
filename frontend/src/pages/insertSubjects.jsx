@@ -21,7 +21,7 @@ function InsertSubjects() {
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
-        const response = await fetch(`${baseUrl}/subjects`, {
+        const response = await fetch(`https://${baseUrl}/subjects`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -66,7 +66,7 @@ function InsertSubjects() {
     const subjectValues = subjects.filter(subject => subject.trim() !== '');
 
     try {
-      const response = await fetch(`${baseUrl}/insertSubjects`, {
+      const response = await fetch(`https://${baseUrl}/insertSubjects`, {
         method: isZero ? "POST" : "PUT",
         headers: {
           "Content-Type": "application/json",
