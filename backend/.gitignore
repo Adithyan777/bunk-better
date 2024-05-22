@@ -1,0 +1,20 @@
+# Node.js dependencies
+node_modules/
+
+# Environment-specific files
+.env
+.env.local
+
+# Editor/IDE specific files
+.vscode/
+.idea/
+
+# Log files
+*.log
+
+# Temporary files and directories
+.tmp/
+.temp/
+
+# Database files
+*.db

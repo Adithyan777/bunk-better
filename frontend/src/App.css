@@ -1,0 +1,50 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 100px; /* Adjust the gap between items */
+    padding: 10px; /* Add some padding to the container to create gap between rows */
+  }
+  
+.item {
+    width: 100px; /* Set a fixed width for the items */
+    height: 50px; /* Set a fixed height for the items */
+}
+
+.line {
+    display: flex;
+    justify-content: space-between;
+}
+
+.align-items-baseline {
+  align-items: baseline;
+}
+
+
+.header {
+  height: 20%; /* Set the height to your desired value */
+  background-color: black; /* Set the background color */
+  color: white; /* Set the text color */
+  padding: 20px; /* Add padding for spacing */
+}
+  
+.buttons {
+    flex: 1;
+    margin: 10px; /* Adjust the gap between buttons */
+}
+
+.progressAndMessage{
+    display: flex;
+    flex-direction: column;
+    align-self: center; /* Align items horizontally in the center */
+    text-align: center; /* Align text horizontally in the center */
+}
+
+.rounded-link:hover {
+  background-color: white;
+  border-radius: 9999px; /* Large value to create rounded shape */
+  padding: 0.5em 1em; /* Adjust padding as needed */
+  transition: background-color 0.3s; /* Smooth transition */
+}
+
+  
+  
