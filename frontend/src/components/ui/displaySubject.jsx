@@ -257,7 +257,7 @@ export default function displaySubject() {
           </CardContent>
           <CardFooter className="progressAndMessage">
             {(() => {
-              const attendancePercentage = Math.round(subject.noOfAttended / subject.totalClasses * 100);
+              let attendancePercentage = Math.round(subject.noOfAttended / subject.totalClasses * 100);
               if (isNaN(attendancePercentage)) {
                 attendancePercentage = 0;
               }
