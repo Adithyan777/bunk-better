@@ -82,7 +82,7 @@ function InsertSubjects() {
       const data = await response.json();
       console.log('Submitted subjects: ', subjectValues);
       console.log("Success:", data);
-      navigate('/home');
+      navigate('/insertTimeTable');
     } catch (error) {
       navigate('/error/' + error.message);
     }

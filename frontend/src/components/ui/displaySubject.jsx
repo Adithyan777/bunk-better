@@ -258,6 +258,9 @@ export default function displaySubject() {
           <CardFooter className="progressAndMessage">
             {(() => {
               const attendancePercentage = Math.round(subject.noOfAttended / subject.totalClasses * 100);
+              if (isNaN(attendancePercentage)) {
+                attendancePercentage = 0;
+              }
               const canMiss = Math.abs(Math.floor(subject.noOfAttended / 3) - subject.noOfMissed);
               const needToAttend = (3 * subject.totalClasses) - (4 * subject.noOfAttended);
 
