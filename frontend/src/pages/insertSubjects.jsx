@@ -11,7 +11,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
-const baseUrl = import.meta.env.VITE_BACKEND_URL;
+
+const environment = import.meta.env.VITE_ENVIRONMENT;
+const baseUrl = environment === 'production'
+  ? import.meta.env.VITE_BACKEND_URL
+  : import.meta.env.VITE_DEVELOPMENT_BACKEND_URL;
+const protocol = environment === 'production' ? 'https' : 'http';
+const getFullUrl = (endpoint) => `${protocol}://${baseUrl}${endpoint}`;
 
 function InsertSubjects() {
   const [subjects, setSubjects] = useState([]);
@@ -21,7 +27,7 @@ function InsertSubjects() {
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
-        const response = await fetch(`https://${baseUrl}/subjects`, {
+        const response = await fetch(getFullUrl('/subjects'), {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -66,7 +72,7 @@ function InsertSubjects() {
     const subjectValues = subjects.filter(subject => subject.trim() !== '');
 
     try {
-      const response = await fetch(`https://${baseUrl}/insertSubjects`, {
+      const response = await fetch(getFullUrl('/insertSubjects'), {
         method: isZero ? "POST" : "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -20,7 +20,12 @@ import {
 import { Label } from "@/components/ui/label"
 import { useState,useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-const baseUrl = import.meta.env.VITE_BACKEND_URL;
+const environment = import.meta.env.VITE_ENVIRONMENT;
+const baseUrl = environment === 'production'
+  ? import.meta.env.VITE_BACKEND_URL
+  : import.meta.env.VITE_DEVELOPMENT_BACKEND_URL;
+const protocol = environment === 'production' ? 'https' : 'http';
+const getFullUrl = (endpoint) => `${protocol}://${baseUrl}${endpoint}`;
 
 export function ExtraClass(props) {
 
@@ -39,7 +44,7 @@ export function ExtraClass(props) {
       setIsLoading(true)
       const fetchSubjects = async () => {
         try {
-          const response = await fetch(`https://${baseUrl}/subjects`, {
+          const response = await fetch(getFullUrl('/subjects'), {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -79,7 +84,7 @@ export function ExtraClass(props) {
   
       try {
         if(selectedSubject && code){
-            const response = await fetch(`https://${baseUrl}/updateAttendance`, {
+            const response = await fetch(getFullUrl('/updateAttendance'), {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',

@@ -10,7 +10,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-const baseUrl = import.meta.env.VITE_BACKEND_URL;
+
+const environment = import.meta.env.VITE_ENVIRONMENT;
+const baseUrl = environment === 'production'
+  ? import.meta.env.VITE_BACKEND_URL
+  : import.meta.env.VITE_DEVELOPMENT_BACKEND_URL;
+const protocol = environment === 'production' ? 'https' : 'http';
+const getFullUrl = (endpoint) => `${protocol}://${baseUrl}${endpoint}`;
 
 export default function SignUpCard() {
   // State management for form inputs
@@ -42,7 +48,7 @@ export default function SignUpCard() {
     console.log("Base URL: "+ baseUrl)
 
     try {
-      const response = await fetch(`https://${baseUrl}/register`, {
+      const response = await fetch(getFullUrl('/register'), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -16,6 +16,11 @@ const JWT_SECRET = process.env.JWT_SECRET;
 // Connection URL for your MongoDB database
 const mongoURI = process.env.MONGO_URI;
 
+const environment = process.env.VITE_ENVIRONMENT;
+const frontEndUrl = environment === 'production'
+  ? process.env.FRONTEND_URL
+  : process.env.DEVELOPMENT_FRONTEND_URL;
+
 // Connect to MongoDB using Mongoose
 mongoose.connect(mongoURI);
 
@@ -61,7 +66,7 @@ const app = express();
 
 // Configure CORS
 const corsOptions = {
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173', // Change this to your frontend's URL in production
+    origin: frontEndUrl,
     methods: 'GET,PUT,PATCH,POST,DELETE',
     credentials: true, // Allow cookies to be sent across origins
     optionsSuccessStatus: 204

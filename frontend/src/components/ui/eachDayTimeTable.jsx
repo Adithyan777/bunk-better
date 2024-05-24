@@ -17,6 +17,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
+const environment = import.meta.env.VITE_ENVIRONMENT;
+const baseUrl = environment === 'production'
+  ? import.meta.env.VITE_BACKEND_URL
+  : import.meta.env.VITE_DEVELOPMENT_BACKEND_URL;
+const protocol = environment === 'production' ? 'https' : 'http';
+const getFullUrl = (endpoint) => `${protocol}://${baseUrl}${endpoint}`;
+
 function EachDayTimeTable(props) {
   const [subjects, setSubjects] = useState([]);
   const [selects, setSelects] = useState([{ id: 1, selectedSubject: undefined }]);
@@ -28,8 +35,7 @@ function EachDayTimeTable(props) {
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
-        const baseUrl = import.meta.env.VITE_BACKEND_URL;
-        const response = await fetch(`https://${baseUrl}/subjects`, {
+        const response = await fetch(getFullUrl('/subjects'), {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -58,8 +64,7 @@ function EachDayTimeTable(props) {
     setIsLoading(true);
     const fetchTimetable = async () => {
       try {
-        const baseUrl = import.meta.env.VITE_BACKEND_URL;
-        const response = await fetch(`https://${baseUrl}/subjectsByDay`, {
+        const response = await fetch(getFullUrl('/subjectsByDay'), {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -122,8 +127,7 @@ function EachDayTimeTable(props) {
     const selectedSubjects = selects.map((select) => select.selectedSubject).filter(Boolean);
     console.log(selectedSubjects);
     try {
-      const baseUrl = import.meta.env.VITE_BACKEND_URL;
-      const response = await fetch(`https://${baseUrl}/insertTimetable`, {
+      const response = await fetch(getFullUrl('/insertTimetable'), {
         method: isDefined ? 'PUT' : 'POST',
         headers: {
           'Content-Type': 'application/json',

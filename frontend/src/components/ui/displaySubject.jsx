@@ -32,6 +32,13 @@ const getCurrentLocalDate = () => {
   return `${year}-${month}-${day}`;
 };
 
+const environment = import.meta.env.VITE_ENVIRONMENT;
+const baseUrl = environment === 'production'
+  ? import.meta.env.VITE_BACKEND_URL
+  : import.meta.env.VITE_DEVELOPMENT_BACKEND_URL;
+const protocol = environment === 'production' ? 'https' : 'http';
+const getFullUrl = (endpoint) => `${protocol}://${baseUrl}${endpoint}`;
+
 
 export default function displaySubject() {
   const [subjects, setSubjects] = useState([]);
@@ -56,10 +63,9 @@ export default function displaySubject() {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const baseUrl = import.meta.env.VITE_BACKEND_URL;
 
         const [subjectsResponse, userResponse] = await Promise.all([
-          fetch(`https://${baseUrl}/subjectsByday`, {
+          fetch(getFullUrl('/subjectsByday'), {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -67,7 +73,7 @@ export default function displaySubject() {
               "day": today
             }
           }),
-          fetch(`https://${baseUrl}/userData`, {
+          fetch(getFullUrl('/userData'), {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -139,8 +145,7 @@ export default function displaySubject() {
     e.preventDefault();
 
     try {
-      const baseUrl = import.meta.env.VITE_BACKEND_URL;
-      const response = await fetch(`https://${baseUrl}/updateSubject`, {
+      const response = await fetch(getFullUrl('/updateSubject'), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

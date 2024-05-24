@@ -4,7 +4,13 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Link , useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
-const baseUrl = import.meta.env.VITE_BACKEND_URL;
+
+const environment = import.meta.env.VITE_ENVIRONMENT;
+const baseUrl = environment === 'production'
+  ? import.meta.env.VITE_BACKEND_URL
+  : import.meta.env.VITE_DEVELOPMENT_BACKEND_URL;
+const protocol = environment === 'production' ? 'https' : 'http';
+const getFullUrl = (endpoint) => `${protocol}://${baseUrl}${endpoint}`;
 
 export default function Component() {
   const [email, setEmail] = useState('');
@@ -16,7 +22,7 @@ export default function Component() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch(`https://${baseUrl}/login`, {
+      const response = await fetch(getFullUrl('/login'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
