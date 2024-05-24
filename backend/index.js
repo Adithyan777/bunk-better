@@ -59,9 +59,6 @@ const Timetable = mongoose.model('Timetable', timetableSchema);
 // Express application
 const app = express();
 
-// Middleware to parse JSON bodies
-app.use(express.json());
-
 // Configure CORS
 const corsOptions = {
     origin: process.env.FRONTEND_URL || 'http://localhost:5173', // Change this to your frontend's URL in production
@@ -70,11 +67,13 @@ const corsOptions = {
     optionsSuccessStatus: 204
   };
   
-  app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
 // Handle preflight requests for all routes
 app.options('*', cors(corsOptions));
 
+// Middleware to parse JSON bodies
+app.use(express.json());
 
 // Middleware to authenticate JWT
 function authenticateToken(req, res, next) {
