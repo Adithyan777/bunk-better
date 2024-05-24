@@ -23,7 +23,7 @@ export default function Component() {
     event.preventDefault();
     try {
       const response = await fetch(getFullUrl('/login'), {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
