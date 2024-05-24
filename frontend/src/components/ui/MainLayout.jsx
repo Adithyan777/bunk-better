@@ -6,10 +6,12 @@ import CustomFooter from './CustomFooter';
 
 const MainLayout = () => {
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <Outlet />
-      <CustomFooter/>
+      <div className="flex-grow">
+        <Outlet />
+      </div>
+      <CustomFooter />
     </div>
   );
 };
