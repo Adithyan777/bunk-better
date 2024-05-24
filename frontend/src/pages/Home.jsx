@@ -1,3 +1,4 @@
+import CustomFooter from "@/components/ui/CustomFooter";
 import LoginCard from "./LoginCard"
 
 
@@ -16,6 +17,7 @@ function Home(){
             </div>
                 <LoginCard/>
             </div>
+            <CustomFooter/>
             
             
         </>

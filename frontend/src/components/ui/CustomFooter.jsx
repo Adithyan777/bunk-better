@@ -1,19 +1,19 @@
-import Link from "react-router-dom"
+import { Link as RouterLink } from "react-router-dom";
 
 export default function CustomFooter() {
   return (
     <footer className="flex items-center justify-center border-t p-4">
       <p className="text-sm">
-        Built by
-        <Link className="font-medium" to="https://github.com/Adithyan777">
+        Built by{" "}
+        <a className="font-medium" href="https://github.com/Adithyan777" target="_blank" rel="noopener noreferrer">
           adithyn
-        </Link>
+        </a>
         . The source code is available on{" "}
-        <Link className="font-medium" to="https://github.com/Adithyan777/bunk-better">
+        <a className="font-medium" href="https://github.com/Adithyan777/bunk-better" target="_blank" rel="noopener noreferrer">
           GitHub
-        </Link>
-        .{"\n      "}
+        </a>
+        .
       </p>
     </footer>
-  )
+  );
 }

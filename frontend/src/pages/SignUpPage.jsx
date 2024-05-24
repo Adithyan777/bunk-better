@@ -1,3 +1,4 @@
+import CustomFooter from "@/components/ui/CustomFooter";
 import SignUpCard from "@/components/ui/SignUpCard"
 
 function SignUpPage(){
@@ -15,7 +16,7 @@ function SignUpPage(){
             </div>
                 <SignUpCard/>
             </div>
-            
+            <CustomFooter></CustomFooter>
             
         </>
     )
