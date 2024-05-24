@@ -72,6 +72,10 @@ const corsOptions = {
   
   app.use(cors(corsOptions));
 
+// Handle preflight requests for all routes
+app.options('*', cors(corsOptions));
+
+
 // Middleware to authenticate JWT
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
