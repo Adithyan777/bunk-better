@@ -21,6 +21,25 @@ const frontEndUrl = environment === 'production'
   ? process.env.FRONTEND_URL
   : process.env.DEVELOPMENT_FRONTEND_URL;
 
+// Express application
+const app = express();
+
+// Configure CORS
+const corsOptions = {
+    origin: frontEndUrl,
+    methods: 'GET,PUT,PATCH,POST,DELETE',
+    credentials: true, // Allow cookies to be sent across origins
+    optionsSuccessStatus: 204
+  };
+  
+app.use(cors(corsOptions));
+
+// Handle preflight requests for all routes
+app.options('*', cors(corsOptions));
+
+// Middleware to parse JSON bodies
+app.use(express.json());
+
 // Connect to MongoDB using Mongoose
 mongoose.connect(mongoURI);
 
@@ -60,25 +79,6 @@ const timetableSchema = new Schema({
 timetableSchema.index({ day: 1, createdBy: 1 }, { unique: true });
 
 const Timetable = mongoose.model('Timetable', timetableSchema);
-
-// Express application
-const app = express();
-
-// Configure CORS
-const corsOptions = {
-    origin: frontEndUrl,
-    methods: 'GET,PUT,PATCH,POST,DELETE',
-    credentials: true, // Allow cookies to be sent across origins
-    optionsSuccessStatus: 204
-  };
-  
-app.use(cors(corsOptions));
-
-// Handle preflight requests for all routes
-app.options('*', cors(corsOptions));
-
-// Middleware to parse JSON bodies
-app.use(express.json());
 
 // Middleware to authenticate JWT
 function authenticateToken(req, res, next) {
