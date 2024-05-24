@@ -16,7 +16,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 // Connection URL for your MongoDB database
 const mongoURI = process.env.MONGO_URI;
 
-const environment = process.env.VITE_ENVIRONMENT;
+const environment = process.env.ENVIRONMENT;
 const frontEndUrl = environment === 'production'
   ? process.env.FRONTEND_URL
   : process.env.DEVELOPMENT_FRONTEND_URL;
