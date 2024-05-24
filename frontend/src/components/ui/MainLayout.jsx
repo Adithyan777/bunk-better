@@ -1,12 +1,15 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Navbar from './Navbar'; // Make sure to create a Navbar component
+import Navbar from './Navbar'; 
+import CustomFooter from './CustomFooter';
+
 
 const MainLayout = () => {
   return (
     <div>
       <Navbar />
       <Outlet />
+      <CustomFooter/>
     </div>
   );
 };
