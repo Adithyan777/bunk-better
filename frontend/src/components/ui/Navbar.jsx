@@ -39,9 +39,6 @@ export default function Navbar() {
             <Link className="flex w-full items-center py-2 text-lg font-semibold" to="/insertTimeTable">
               Add timetable
             </Link>
-            <Link className="flex w-full items-center py-2 text-lg font-semibold" href="#">
-              Contact
-            </Link>
             <Button onClick={e=>handleSubmit(e)}>Sign Out</Button>
           </div>
         </SheetContent>
