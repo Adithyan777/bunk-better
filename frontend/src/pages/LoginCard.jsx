@@ -1,3 +1,5 @@
+// LoginCard.jsx
+
 import React, { useState } from 'react';
 import { CardTitle, CardDescription, CardHeader, CardContent, Card } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -12,7 +14,7 @@ const baseUrl = environment === 'production'
 const protocol = environment === 'production' ? 'https' : 'http';
 const getFullUrl = (endpoint) => `${protocol}://${baseUrl}${endpoint}`;
 
-export default function Component() {
+export default function LoginCard() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -30,16 +32,12 @@ export default function Component() {
         body: JSON.stringify({ email, password })
       });
 
-      // Check if the response from the server is OK (status 200)
       if (response.ok) {
         const data = await response.json();
-        // Save the token to localStorage
         localStorage.setItem('token', data.token);
-        // Optionally, redirect the user or give feedback that login was successful
         console.log('Login successful : ' + data.token);
         navigate('/home');
       } else {
-        // Handle errors such as wrong credentials
         throw new Error(response.status);
       }
     } catch (error) {
@@ -48,14 +46,14 @@ export default function Component() {
   };
 
   return (
-    <div className="m-40 flex justify-center">
-      <Card className="mx-auto max-w-sm" onSubmit={handleSubmit}>
+    <div className="m-4 md:m-0 md:flex md:justify-center">
+      <Card className="max-w-sm">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Login</CardTitle>
           <CardDescription>Enter your email below to login to your account</CardDescription>
         </CardHeader>
         <CardContent>
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input 
@@ -75,14 +73,14 @@ export default function Component() {
                 <Input 
                   id="password" 
                   required 
-                  type={showPassword ? 'text' : 'password'}  // Toggle input type based on state
+                  type={showPassword ? 'text' : 'password'} 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <button 
                   type="button" 
                   className="absolute inset-y-0 right-0 px-4 text-sm text-gray-600" 
-                  onClick={() => setShowPassword(!showPassword)}  // Toggle showPassword state
+                  onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? 'Hide' : 'Show'}
                 </button>

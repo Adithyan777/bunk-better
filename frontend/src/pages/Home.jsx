@@ -1,27 +1,25 @@
+// Home.jsx
+
 import CustomFooter from "@/components/ui/CustomFooter";
-import LoginCard from "./LoginCard"
+import LoginCard from "./LoginCard";
 
-
-function Home(){
-
-    return(
-        <>
-            <div class="flex items-center justify-center h-screen">
-            <div class="flex flex-col items-center justify-center">
-            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-                Bunk Better
-            </h1>
-            <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-                Helps you bunk better.
-            </h2>
-            </div>
-                <LoginCard/>
-            </div>
-            <CustomFooter/>
-            
-            
-        </>
-    )
+function Home() {
+  return (
+    <>
+      <div className="flex flex-col items-center justify-center h-screen">
+        <div className="text-center m-9">
+          <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl">
+            Bunk Better
+          </h1>
+          <h2 className="text-3xl font-semibold tracking-tight">
+            Helps you bunk better.
+          </h2>
+        </div>
+        <LoginCard />
+      </div>
+      <CustomFooter />
+    </>
+  );
 }
 
 export default Home;

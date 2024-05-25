@@ -1,3 +1,5 @@
+// SignUpCard.jsx
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -19,7 +21,6 @@ const protocol = environment === 'production' ? 'https' : 'http';
 const getFullUrl = (endpoint) => `${protocol}://${baseUrl}${endpoint}`;
 
 export default function SignUpCard() {
-  // State management for form inputs
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -27,10 +28,8 @@ export default function SignUpCard() {
     password: "",
   });
 
-  // State for toggling password visibility
   const [showPassword, setShowPassword] = useState(false);
 
-  // Handle input change
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevFormData) => ({
@@ -39,14 +38,10 @@ export default function SignUpCard() {
     }));
   };
 
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted with data:", formData); // Debugging log
-    console.log("Base URL: "+ baseUrl)
-
     try {
       const response = await fetch(getFullUrl('/register'), {
         method: "POST",
@@ -61,17 +56,15 @@ export default function SignUpCard() {
       }
 
       const data = await response.json();
-      console.log("Success:", data); // Debugging log
+      console.log("Success:", data);
       navigate('/');
-      // Handle successful signup (e.g., redirect to login page, show success message, etc.)
     } catch (error) {
       navigate('/error/' + error.message);
-      // Handle errors (e.g., show error message to the user)
     }
   };
 
   return (
-    <Card className="m-40 max-w-sm">
+    <Card className="m-4 md:m-0 md:max-w-sm">
       <CardHeader>
         <CardTitle className="text-xl">Sign Up</CardTitle>
         <CardDescription>
@@ -81,7 +74,7 @@ export default function SignUpCard() {
       <CardContent>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="firstName">First name</Label>
                 <Input
@@ -117,7 +110,7 @@ export default function SignUpCard() {
               <div className="relative">
                 <Input
                   id="password"
-                  type={showPassword ? 'text' : 'password'}  // Toggle input type based on state
+                  type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={handleInputChange}
                   required
@@ -125,7 +118,7 @@ export default function SignUpCard() {
                 <button
                   type="button"
                   className="absolute inset-y-0 right-0 px-4 text-sm text-gray-600"
-                  onClick={() => setShowPassword(!showPassword)}  // Toggle showPassword state
+                  onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? 'Hide' : 'Show'}
                 </button>
