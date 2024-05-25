@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import InfoMessage from "./InfoMessage";
 
 const environment = import.meta.env.VITE_ENVIRONMENT;
 const baseUrl = environment === 'production'
@@ -24,12 +25,17 @@ const baseUrl = environment === 'production'
 const protocol = environment === 'production' ? 'https' : 'http';
 const getFullUrl = (endpoint) => `${protocol}://${baseUrl}${endpoint}`;
 
+function hasDuplicates(array) {
+  return new Set(array).size !== array.length;
+}
+
 function EachDayTimeTable(props) {
   const [subjects, setSubjects] = useState([]);
   const [selects, setSelects] = useState([{ id: 1, selectedSubject: undefined }]);
   const [nextId, setNextId] = useState(2);
-  const [isDefined,setIsDefined] = useState();
+  const [isDefined, setIsDefined] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [showDuplicateError, setShowDuplicateError] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,10 +56,10 @@ function EachDayTimeTable(props) {
         const data = await response.json();
         const formattedData = data.map(obj => ({ subname: obj.subname, id: obj._id }));
         setSubjects(formattedData);
-        console.log("Success:", formattedData); 
+        console.log("Success:", formattedData);
       } catch (error) {
         navigate('/error/' + error.message);
-        console.error("Error:", error); 
+        console.error("Error:", error);
       }
     };
 
@@ -69,11 +75,11 @@ function EachDayTimeTable(props) {
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + localStorage.getItem("token"),
-            day : props.day
+            day: props.day
           }
         });
 
-        if (response.ok){
+        if (response.ok) {
           setIsDefined(true);
           const data = await response.json();
           const fetchedSelects = data.map((item, index) => ({
@@ -81,12 +87,11 @@ function EachDayTimeTable(props) {
             selectedSubject: item._id
           }));
           setSelects(fetchedSelects);
-          // console.log("Fetched selects: "+ fetchedSelects);
           setNextId(data.length + 1);
-        }else if (response.status === 404) {
+        } else if (response.status === 404) {
           setIsDefined(false);
           setSelects([{ id: 1, selectedSubject: undefined }]);
-        }else if(!response.ok){
+        } else if (!response.ok) {
           throw Error(response.status);
         }
       } catch (error) {
@@ -126,6 +131,14 @@ function EachDayTimeTable(props) {
     e.preventDefault();
     const selectedSubjects = selects.map((select) => select.selectedSubject).filter(Boolean);
     console.log(selectedSubjects);
+
+    if (selectedSubjects.length && hasDuplicates(selectedSubjects)) {
+      setShowDuplicateError(true);
+      return;
+    } else {
+      setShowDuplicateError(false);
+    }
+
     try {
       const response = await fetch(getFullUrl('/insertTimetable'), {
         method: isDefined ? 'PUT' : 'POST',
@@ -139,8 +152,7 @@ function EachDayTimeTable(props) {
       if (response.ok) {
         const data = await response.json();
         console.log(data);
-      }
-      else{
+      } else {
         throw new Error(response.status);
       }
     } catch (error) {
@@ -158,54 +170,57 @@ function EachDayTimeTable(props) {
             </h3>
           </CardTitle>
           {!isDefined ? (
-              <CardDescription>You have not added any subjects for {props.day}. Add some here.</CardDescription>):
-              (<CardDescription>You have added some subjects for {props.day}. Add/Remove them here.</CardDescription>)
+            <CardDescription>You have not added any subjects for {props.day}. Add some here.</CardDescription>) :
+            (<CardDescription>You have added some subjects for {props.day}. Add/Remove them here.</CardDescription>)
           }
         </CardHeader>
         <CardContent className="space-y-4">
           {isLoading ?
-          (<p>Loading...</p>) :
-          (
-            selects.map((select, index) => (
-              <div key={select.id} className="flex items-center space-x-2">
-                <Select
-                  value={select.selectedSubject}
-                  onValueChange={(newValue) => handleSubjectSelect(newValue, select.id)}
-                >
-                  <SelectTrigger className="w-80">
-                    <SelectValue placeholder="Select subject" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {subjects.map((subject) => (
-                      <SelectItem key={subject.id} value={subject.id}>
-                        {subject.subname}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {index === selects.length - 1 ? (
-                  <Button
-                    size="icon"
-                    className="ml-2 align-items-center rounded-full"
-                    onClick={handleAddSelect}
+            (<p>Loading...</p>) :
+            (
+              selects.map((select, index) => (
+                <div key={select.id} className="flex items-center space-x-2">
+                  <Select
+                    value={select.selectedSubject}
+                    onValueChange={(newValue) => handleSubjectSelect(newValue, select.id)}
                   >
-                    +
-                  </Button>
-                ) : (
-                  <Button
-                    size="icon"
-                    className="ml-2 align-items-center rounded-full"
-                    onClick={() => handleRemoveSelect(select.id)}
-                  >
-                    -
-                  </Button>
-                )}
-              </div>
-            ))
-        )}
+                    <SelectTrigger className="w-80">
+                      <SelectValue placeholder="Select subject" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {subjects.map((subject) => (
+                        <SelectItem key={subject.id} value={subject.id}>
+                          {subject.subname}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {index === selects.length - 1 ? (
+                    <Button
+                      size="icon"
+                      className="ml-2 align-items-center rounded-full"
+                      onClick={handleAddSelect}
+                    >
+                      +
+                    </Button>
+                  ) : (
+                    <Button
+                      size="icon"
+                      className="ml-2 align-items-center rounded-full"
+                      onClick={() => handleRemoveSelect(select.id)}
+                    >
+                      -
+                    </Button>
+                  )}
+                </div>
+              ))
+            )}
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex-col">
           <Button onClick={handleSubmit}>Submit</Button>
+          {showDuplicateError &&
+            (<InfoMessage message="You can only add a subject once per day." submessage="You can always add extra classes later." />)
+          }
         </CardFooter>
       </Card>
     </>
