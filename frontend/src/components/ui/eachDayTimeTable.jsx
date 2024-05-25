@@ -162,7 +162,7 @@ function EachDayTimeTable(props) {
 
   return (
     <>
-      <Card>
+      <Card className="m-5 md:m-10 lg:m-20">
         <CardHeader>
           <CardTitle>
             <h3 className="text-2xl font-bold">
@@ -179,12 +179,13 @@ function EachDayTimeTable(props) {
             (<p>Loading...</p>) :
             (
               selects.map((select, index) => (
-                <div key={select.id} className="flex items-center space-x-2">
+                <div key={select.id} className="flex flex-col md:flex-row items-center md:space-x-2 space-y-2 md:space-y-0">
                   <Select
                     value={select.selectedSubject}
                     onValueChange={(newValue) => handleSubjectSelect(newValue, select.id)}
+                    className="w-full md:w-80"
                   >
-                    <SelectTrigger className="w-80">
+                    <SelectTrigger>
                       <SelectValue placeholder="Select subject" />
                     </SelectTrigger>
                     <SelectContent>
@@ -198,7 +199,7 @@ function EachDayTimeTable(props) {
                   {index === selects.length - 1 ? (
                     <Button
                       size="icon"
-                      className="ml-2 align-items-center rounded-full"
+                      className="mt-2 md:mt-0 ml-0 md:ml-2 align-items-center rounded-full"
                       onClick={handleAddSelect}
                     >
                       +
@@ -206,7 +207,7 @@ function EachDayTimeTable(props) {
                   ) : (
                     <Button
                       size="icon"
-                      className="ml-2 align-items-center rounded-full"
+                      className="mt-2 md:mt-0 ml-0 md:ml-2 align-items-center rounded-full"
                       onClick={() => handleRemoveSelect(select.id)}
                     >
                       -

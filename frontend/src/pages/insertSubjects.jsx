@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
@@ -21,7 +20,7 @@ const getFullUrl = (endpoint) => `${protocol}://${baseUrl}${endpoint}`;
 
 function InsertSubjects() {
   const [subjects, setSubjects] = useState([]);
-  const [isZero,setIsZero] = useState();
+  const [isZero, setIsZero] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,7 +39,7 @@ function InsertSubjects() {
         }
 
         const data = await response.json();
-        if(data.length === 0) setIsZero(true);
+        setIsZero(data.length === 0);
         setSubjects(data.length ? data.map(subject => subject.subname) : ['']);
       } catch (error) {
         navigate('/error/' + error.message);
@@ -97,19 +96,15 @@ function InsertSubjects() {
   };
 
   return (
-
-    <>
-      <Card className='m-40' >
+    <div className="flex justify-center items-center h-screen">
+      <Card>
         <CardHeader>
           <CardTitle>
-            <h3 className="text-2xl font-bold">
-              Add all your subjects here
-            </h3>
+            <h3 className="text-2xl font-bold">Add all your subjects here</h3>
           </CardTitle>
-          {isZero ? (
-              <CardDescription>You have added 0 subjects. Add some here.</CardDescription>):
-              (<CardDescription>You have added some subjects. Add/Remove them here.</CardDescription>)
-          }
+          <CardDescription>
+            {isZero ? "You haven't added any subjects yet." : "You have added some subjects. Add/Remove them here."}
+          </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col space-y-4">
           {subjects.map((subject, index) => (
@@ -118,9 +113,9 @@ function InsertSubjects() {
                 placeholder="Subject name"
                 value={subject}
                 onChange={(e) => handleSubjectChange(index, e.target.value)}
-                className="w-80"
+                className="flex-1"
               />
-              {index === subjects.length - 1 && (
+              {index === subjects.length - 1 ? (
                 <Button
                   size="icon"
                   onClick={handleAddSubject}
@@ -128,8 +123,7 @@ function InsertSubjects() {
                 >
                   +
                 </Button>
-              )}
-              {index !== subjects.length - 1 && (
+              ) : (
                 <Button
                   size="icon"
                   onClick={() => handleRemoveSubject(index)}
@@ -145,9 +139,8 @@ function InsertSubjects() {
           <Button onClick={handleSubmit}>Submit</Button>
         </CardFooter>
       </Card>
-    </>
+    </div>
   );
 }
 
-
-export default InsertSubjects
+export default InsertSubjects;

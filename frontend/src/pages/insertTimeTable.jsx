@@ -24,7 +24,7 @@ function InsertTimeTable() {
 
     return (
         <>
-            <Card className="m-40">
+            <Card className="m-5 md:m-20 lg:m-40">
                 <CardHeader>
                     <CardTitle>
                         <h3 className="text-2xl font-bold">
@@ -56,7 +56,7 @@ function InsertTimeTable() {
                         </BreadcrumbList>
                     </Breadcrumb>
                 </CardHeader>
-                <CardContent className="flex flex-wrap gap-x-100 gap-y-10 p-10">
+                <CardContent className="flex flex-col md:flex-row flex-wrap gap-5 p-5">
                     {selectedDay ? (
                         <EachDayTimeTable key={selectedDay} day={selectedDay} />
                     ) : (
