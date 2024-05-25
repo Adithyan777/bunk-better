@@ -28,6 +28,7 @@ const app = express();
 const corsOptions = {
     origin: frontEndUrl,
     methods: 'GET,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type,Authorization,day', // Add any headers you expect from the frontend
     credentials: true, // Allow cookies to be sent across origins
     optionsSuccessStatus: 204
   };
