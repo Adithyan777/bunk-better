@@ -162,7 +162,7 @@ function EachDayTimeTable(props) {
 
   return (
     <>
-      <Card className="m-5 md:m-10 lg:m-20">
+      <Card className="m-3 md:m-7 lg:m-17">
         <CardHeader>
           <CardTitle>
             <h3 className="text-2xl font-bold">

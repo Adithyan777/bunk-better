@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './button';
 import { useNavigate } from 'react-router-dom';
-const baseUrl = import.meta.env.VITE_BACKEND_URL;
+
+const environment = import.meta.env.VITE_ENVIRONMENT;
+const baseUrl = environment === 'production'
+  ? import.meta.env.VITE_BACKEND_URL
+  : import.meta.env.VITE_DEVELOPMENT_BACKEND_URL;
+const protocol = environment === 'production' ? 'https' : 'http';
+const getFullUrl = (endpoint) => `${protocol}://${baseUrl}${endpoint}`;
 
 export default function ToggleButtons({ subjectId, attended, missed, total, onUpdate, clickedButton, onButtonClick }) {
   const [currentState, setCurrentState] = useState({
@@ -71,7 +77,7 @@ export default function ToggleButtons({ subjectId, attended, missed, total, onUp
 
   const handleAttendanceUpdate = async (newAttended, newMissed, newTotal) => {
     try {
-      const response = await fetch(`https://${baseUrl}/updateSubject`, {
+      const response = await fetch(getFullUrl('/updateSubject'), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -94,10 +100,10 @@ export default function ToggleButtons({ subjectId, attended, missed, total, onUp
   };
 
   return (
-    <div className="w-full flex justify-around">
+    <div className="flex flex-wrap justify-between gap-2 p-4">
       <Button
         {...(currentState.clickedButton !== 'attended' ? { variant: 'outline' } : {})}
-        className="buttons"
+        className="flex-1 min-w-[80px] md:min-w-[100px] lg:min-w-[120px]"
         onClick={() => handleButtonClick('attended')}
       >
         Attended
@@ -105,7 +111,7 @@ export default function ToggleButtons({ subjectId, attended, missed, total, onUp
 
       <Button
         {...(currentState.clickedButton !== 'missed' ? { variant: 'outline' } : {})}
-        className="buttons"
+        className="flex-1 min-w-[80px] md:min-w-[100px] lg:min-w-[120px]"
         onClick={() => handleButtonClick('missed')}
       >
         Missed
@@ -113,7 +119,7 @@ export default function ToggleButtons({ subjectId, attended, missed, total, onUp
 
       <Button
         {...(currentState.clickedButton !== 'noClass' ? { variant: 'outline' } : {})}
-        className="buttons"
+        className="flex-1 min-w-[80px] md:min-w-[100px] lg:min-w-[120px]"
         onClick={() => handleButtonClick('noClass')}
       >
         No Class
