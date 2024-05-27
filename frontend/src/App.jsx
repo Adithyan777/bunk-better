@@ -9,7 +9,6 @@ import SignUpPage from "./pages/SignUpPage"
 import DisplaySubject from "./components/ui/displaySubject"
 import MainLayout from "./components/ui/MainLayout"
 import ErrorPage from "./pages/ErrorPage"
-import ShowToast from "./components/ui/showToast"
 import { Toaster } from "@/components/ui/toaster";
 
 
