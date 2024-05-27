@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import InfoMessage from "./InfoMessage";
+import { toast } from "@/components/ui/use-toast";
 
 const environment = import.meta.env.VITE_ENVIRONMENT;
 const baseUrl = environment === 'production'
@@ -152,6 +153,12 @@ function EachDayTimeTable(props) {
       if (response.ok) {
         const data = await response.json();
         console.log(data);
+        // Show success toast
+        toast({
+          title: "Time Table for " + props.day + " added successfully.",
+          description: " ",
+          delay: 3000
+        });
       } else {
         throw new Error(response.status);
       }

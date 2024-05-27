@@ -20,6 +20,8 @@ import {
 import { Label } from "@/components/ui/label"
 import { useState,useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { toast } from "@/components/ui/use-toast";
+
 const environment = import.meta.env.VITE_ENVIRONMENT;
 const baseUrl = environment === 'production'
   ? import.meta.env.VITE_BACKEND_URL
@@ -102,6 +104,11 @@ export function ExtraClass(props) {
           props.updateSubjectCounts(updatedSubject._id, updatedSubject.noOfAttended, updatedSubject.noOfMissed, updatedSubject.totalClasses);
           console.log(updatedSubject);
           setIsDialogOpen(false);
+          toast({
+            title: "Extra Class added successfully.",
+            description: " ",
+            delay: 3000
+          });
           setCode(0);
           setSelectedSubject(0);
       }

@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
+import { toast } from "@/components/ui/use-toast";
 
 const environment = import.meta.env.VITE_ENVIRONMENT;
 const baseUrl = environment === 'production'
@@ -85,6 +86,11 @@ function InsertSubjects() {
       }
 
       const data = await response.json();
+      toast({
+        title: "Added Subjects successfully.",
+        description: " ",
+        delay: 3000
+      });
       console.log('Submitted subjects: ', subjectValues);
       console.log("Success:", data);
       navigate('/insertTimeTable');

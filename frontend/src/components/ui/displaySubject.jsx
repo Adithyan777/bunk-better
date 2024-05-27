@@ -17,6 +17,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { ExtraClass } from './extraClass';
 import { useNavigate } from 'react-router-dom';
+import { toast } from "@/components/ui/use-toast";
+
 
 const getCurrentDay = () => {
   const date = new Date();
@@ -162,6 +164,11 @@ export default function displaySubject() {
       const updatedSubject = await response.json();
       updateSubjectCounts(subjectId, updatedSubject.noOfAttended, updatedSubject.noOfMissed, updatedSubject.totalClasses);
       handleDialogOpenChange(subjectId, false);
+      toast({
+        title: "Attendance edited successfully.",
+        description: " ",
+        delay: 3000
+      });
     } catch (error) {
       navigate('/error/' + error.message);
     }
