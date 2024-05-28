@@ -352,6 +352,39 @@ app.get('/subjectsByDay', authenticateToken, async (req, res) => {
 // PUT route to update subject document with attendance details
 app.put('/updateSubject', authenticateToken, async (req, res) => {
     try {
+        const { id, attended, missed, total, clickedButton } = req.body;
+        console.log({ id, attended, missed, total, clickedButton });
+        // Validate input parameters
+        if (id == null || attended == null || missed == null || total == null) {
+            return res.status(400).send('All fields are required');
+        }
+
+
+        // Find subject document by ID
+        const subject = await Subject.findById(id);
+        if (!subject) {
+            return res.status(404).send('Subject not found');
+        }
+
+        // Update attendance details
+        subject.noOfAttended = attended;
+        subject.noOfMissed = missed;
+        subject.totalClasses = total;
+        subject.lastChange = clickedButton;
+        subject.lastUpdated =  getCurrentLocalDate();
+
+        // Save the updated subject document
+        const updatedSubject = await subject.save();
+        res.json(updatedSubject);
+    } catch (error) {
+        console.error('Error updating subject:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// PUT route to update subject document with attendance details
+app.put('/editSubject', authenticateToken, async (req, res) => {
+    try {
         const { id, attended, missed, total } = req.body;
         console.log({ id, attended, missed, total });
         // Validate input parameters
@@ -366,21 +399,10 @@ app.put('/updateSubject', authenticateToken, async (req, res) => {
             return res.status(404).send('Subject not found');
         }
 
-        if (subject.noOfAttended < attended){
-            subject.lastChange = "attended";
-        }
-        else if(subject.noOfMissed < missed){
-            subject.lastChange = "missed"
-        }
-        else if(subject.noOfAttended == attended && subject.noOfMissed == missed){
-            subject.lastChange = "noClass"
-        }
-
         // Update attendance details
         subject.noOfAttended = attended;
         subject.noOfMissed = missed;
         subject.totalClasses = total;
-        subject.lastUpdated =  getCurrentLocalDate();
 
         // Save the updated subject document
         const updatedSubject = await subject.save();

@@ -10,20 +10,11 @@ const protocol = environment === 'production' ? 'https' : 'http';
 const getFullUrl = (endpoint) => `${protocol}://${baseUrl}${endpoint}`;
 
 export default function ToggleButtons({ subjectId, attended, missed, total, onUpdate, clickedButton, onButtonClick }) {
-  const [currentState, setCurrentState] = useState({
-    attended,
-    missed,
-    total,
-    clickedButton
-  });
+  const [currentState, setCurrentState] = useState({ attended, missed, total, clickedButton });
   const navigate = useNavigate();
+
   useEffect(() => {
-    setCurrentState({
-      attended,
-      missed,
-      total,
-      clickedButton
-    });
+    setCurrentState({ attended, missed, total, clickedButton });
   }, [attended, missed, total, clickedButton]);
 
   const handleButtonClick = async (buttonType) => {
@@ -71,11 +62,6 @@ export default function ToggleButtons({ subjectId, attended, missed, total, onUp
 
     setCurrentState({ attended, missed, total, clickedButton });
 
-    handleAttendanceUpdate(attended, missed, total);
-    onButtonClick(subjectId, clickedButton);
-  };
-
-  const handleAttendanceUpdate = async (newAttended, newMissed, newTotal) => {
     try {
       const response = await fetch(getFullUrl('/updateSubject'), {
         method: 'PUT',
@@ -85,15 +71,16 @@ export default function ToggleButtons({ subjectId, attended, missed, total, onUp
         },
         body: JSON.stringify({
           id: subjectId,
-          attended: newAttended,
-          missed: newMissed,
-          total: newTotal
+          attended,
+          missed,
+          total,
+          clickedButton
         }),
       });
 
       if (!response.ok) throw new Error(response.status);
-      console.log("Successfully updated subject counts");
-      onUpdate(subjectId, newAttended, newMissed, newTotal);
+      onUpdate(subjectId, attended, missed, total);
+      onButtonClick(subjectId, clickedButton);
     } catch (error) {
       navigate('/error/' + error.message);
     }
@@ -102,23 +89,21 @@ export default function ToggleButtons({ subjectId, attended, missed, total, onUp
   return (
     <div className="flex flex-wrap justify-between gap-2 p-4">
       <Button
-        {...(currentState.clickedButton !== 'attended' ? { variant: 'outline' } : {})}
+        variant={currentState.clickedButton !== 'attended' ? 'outline' : 'default'}
         className="flex-1 min-w-[80px] md:min-w-[100px] lg:min-w-[120px]"
         onClick={() => handleButtonClick('attended')}
       >
         Attended
       </Button>
-
       <Button
-        {...(currentState.clickedButton !== 'missed' ? { variant: 'outline' } : {})}
+        variant={currentState.clickedButton !== 'missed' ? 'outline' : 'default'}
         className="flex-1 min-w-[80px] md:min-w-[100px] lg:min-w-[120px]"
         onClick={() => handleButtonClick('missed')}
       >
         Missed
       </Button>
-
       <Button
-        {...(currentState.clickedButton !== 'noClass' ? { variant: 'outline' } : {})}
+        variant={currentState.clickedButton !== 'noClass' ? 'outline' : 'default'}
         className="flex-1 min-w-[80px] md:min-w-[100px] lg:min-w-[120px]"
         onClick={() => handleButtonClick('noClass')}
       >

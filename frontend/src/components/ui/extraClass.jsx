@@ -13,12 +13,11 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
-import { useState,useEffect } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "@/components/ui/use-toast";
 
@@ -31,15 +30,11 @@ const getFullUrl = (endpoint) => `${protocol}://${baseUrl}${endpoint}`;
 
 export function ExtraClass(props) {
 
-    // use the /updateAttendance route handler for the request
-    // also get required props from parent component
-    // copy isDialogue open state variable logic from parent component to close the dialog
-
-    const [selectedSubject,setSelectedSubject] = useState(0);
-    const [subs,setSubs] = useState([]);
-    const [code,setCode] = useState(0);
-    const [isLoading,setIsLoading] = useState(true); 
-    const [isDialogOpen,setIsDialogOpen] = useState(false);
+    const [selectedSubject, setSelectedSubject] = useState(0);
+    const [subs, setSubs] = useState([]);
+    const [code, setCode] = useState(0);
+    const [isLoading, setIsLoading] = useState(true); 
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -71,55 +66,67 @@ export function ExtraClass(props) {
       fetchSubjects();
     }, []);
 
-    const handleSubjectSelect = (select)=>{
+    const handleSubjectSelect = (select) => {
       setSelectedSubject(select);
       console.log(select);
     }
 
-    const handleInputChange = (change)=>{
+    const handleInputChange = (change) => {
       setCode(change === 'attended' ? 1 : -1);
       console.log(change === 'attended' ? 1 : -1);
     }
 
     const handleSubmit = async (e) => {
       e.preventDefault();
+
+      if (!selectedSubject) {
+        toast({
+          title: "Subject not selected",
+          description: "Please select a subject.",
+          delay: 3000
+        });
+        return;
+      }
+
+      if (code === 0) {
+        toast({
+          title: "Attendance not selected",
+          description: "Please select attended or missed.",
+          delay: 3000
+        });
+        return;
+      }
   
       try {
-        if(selectedSubject && code){
-            const response = await fetch(getFullUrl('/updateAttendance'), {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + localStorage.getItem('token')
-            },
-            body: JSON.stringify({
-              "docID": selectedSubject,
-              "code" : code
-            }),
-          });
+        const response = await fetch(getFullUrl('/updateAttendance'), {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+          },
+          body: JSON.stringify({
+            "docID": selectedSubject,
+            "code" : code
+          }),
+        });
   
-          if (!response.ok) throw new Error(response.status);
-    
-          const updatedSubject = await response.json();
-          props.updateSubjectCounts(updatedSubject._id, updatedSubject.noOfAttended, updatedSubject.noOfMissed, updatedSubject.totalClasses);
-          console.log(updatedSubject);
-          setIsDialogOpen(false);
-          toast({
-            title: "Extra Class added successfully.",
-            description: " ",
-            delay: 3000
-          });
-          setCode(0);
-          setSelectedSubject(0);
-      }
-      else{
-        throw new Error("400");
-      }
+        if (!response.ok) throw new Error(response.status);
+  
+        const updatedSubject = await response.json();
+        props.updateSubjectCounts(updatedSubject._id, updatedSubject.noOfAttended, updatedSubject.noOfMissed, updatedSubject.totalClasses);
+        console.log(updatedSubject);
+        setIsDialogOpen(false);
+        toast({
+          title: "Extra Class added successfully.",
+          description: " ",
+          delay: 3000
+        });
+        setCode(0);
+        setSelectedSubject(0);
       } catch (error) {
         navigate('/error/' + error.message);
       }
     };
-
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={(change)=> setIsDialogOpen(change)}>
@@ -147,7 +154,6 @@ export function ExtraClass(props) {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  {/* <SelectLabel>Fruits</SelectLabel> */}
                   {
                     subs.map((subject)=>(
                       <SelectItem key={subject.id} value={subject.id}>
@@ -180,4 +186,3 @@ export function ExtraClass(props) {
     </Dialog>
   )
 }
- 

@@ -37,6 +37,7 @@ function EachDayTimeTable(props) {
   const [isDefined, setIsDefined] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [showDuplicateError, setShowDuplicateError] = useState(false);
+  const [showEmptyFieldError, setShowEmptyFieldError] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -133,6 +134,14 @@ function EachDayTimeTable(props) {
     const selectedSubjects = selects.map((select) => select.selectedSubject).filter(Boolean);
     console.log(selectedSubjects);
 
+    if (selects.some(select => !select.selectedSubject)) {
+      setShowEmptyFieldError(true);
+      setShowDuplicateError(false);
+      return;
+    } else {
+      setShowEmptyFieldError(false);
+    }
+
     if (selectedSubjects.length && hasDuplicates(selectedSubjects)) {
       setShowDuplicateError(true);
       return;
@@ -226,6 +235,9 @@ function EachDayTimeTable(props) {
         </CardContent>
         <CardFooter className="flex-col">
           <Button onClick={handleSubmit}>Submit</Button>
+          {showEmptyFieldError &&
+            (<InfoMessage message="Please select a subject for each field." submessage="All fields must be filled." />)
+          }
           {showDuplicateError &&
             (<InfoMessage message="You can only add a subject once per day." submessage="You can always add extra classes later." />)
           }

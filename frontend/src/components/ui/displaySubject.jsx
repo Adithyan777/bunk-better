@@ -19,7 +19,6 @@ import { ExtraClass } from './extraClass';
 import { useNavigate } from 'react-router-dom';
 import { toast } from "@/components/ui/use-toast";
 
-
 const getCurrentDay = () => {
   const date = new Date();
   const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -41,7 +40,7 @@ const baseUrl = environment === 'production'
 const protocol = environment === 'production' ? 'https' : 'http';
 const getFullUrl = (endpoint) => `${protocol}://${baseUrl}${endpoint}`;
 
-export default function displaySubject() {
+export default function DisplaySubject() {
   const [subjects, setSubjects] = useState([]);
   const [clickedButtonState, setClickedButtonState] = useState({});
   const [today, setToday] = useState(getCurrentDay());
@@ -64,7 +63,6 @@ export default function displaySubject() {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
-
         const [subjectsResponse, userResponse] = await Promise.all([
           fetch(getFullUrl('/subjectsByday'), {
             method: "GET",
@@ -87,10 +85,7 @@ export default function displaySubject() {
           if (subjectsResponse.status === 404 && userResponse.ok) {
             setNoClass(0);
             setSubjects([]);
-
-            const fetchedUserData = await userResponse.json();
-            setUserData(fetchedUserData);
-
+            setUserData(await userResponse.json());
           } else if (!subjectsResponse.ok) {
             throw new Error(subjectsResponse.status);
           } else if (!userResponse.ok) {
@@ -99,12 +94,10 @@ export default function displaySubject() {
         } else {
           const subjectsData = await subjectsResponse.json();
           const fetchedUserData = await userResponse.json();
-
           setSubjects(subjectsData);
           setNoClass(subjectsData.length);
           setUserData(fetchedUserData);
           const newClickedButtonState = {};
-
           subjectsData.forEach(subject => {
             if (subject.lastUpdated && subject.lastUpdated === currentDate) {
               newClickedButtonState[subject._id] = subject.lastChange;
@@ -112,26 +105,25 @@ export default function displaySubject() {
               newClickedButtonState[subject._id] = null;
             }
           });
-
           setClickedButtonState(newClickedButtonState);
-          console.log("Fetched subjects:", subjectsData); // Debugging log
         }
       } catch (error) {
-        console.error("Error fetching subjects:", error);
+        console.error("Error fetching data:", error);
+        navigate('/error/' + error.message);
       }
     };
 
     fetchData();
-  }, [today, currentDate]); // Run effect when today changes
+  }, [today, currentDate, navigate]);
 
   const updateSubjectCounts = (id, newAttended, newMissed, newTotal) => {
-    setSubjects(prevSubjects => {
-      return prevSubjects.map(subject =>
+    setSubjects(prevSubjects =>
+      prevSubjects.map(subject =>
         subject._id === id
           ? { ...subject, noOfAttended: newAttended, noOfMissed: newMissed, totalClasses: newTotal }
           : subject
-      );
-    });
+      )
+    );
   };
 
   const updateClickedButtonState = (subjectId, clickedButton) => {
@@ -144,8 +136,17 @@ export default function displaySubject() {
   const handleSubmit = async (e, subjectId) => {
     e.preventDefault();
 
+    if (isNaN(editedAttended) || isNaN(editedMissed)) {
+      toast({
+        title: "Invalid input.",
+        description: "Please enter valid numbers for attended and missed classes.",
+        delay: 3000
+      });
+      return;
+    }
+
     try {
-      const response = await fetch(getFullUrl('/updateSubject'), {
+      const response = await fetch(getFullUrl('/editSubject'), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -178,23 +179,25 @@ export default function displaySubject() {
     <>
       <Card className="m-5 flex-col">
         <div className='m-3'>
-          {(Object.keys(userData).length !== 0) ? (
+          {userData.firstName ? (
             <CardTitle className="scroll border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
               Welcome {userData.firstName + " " + userData.lastName + "!"}
-            </CardTitle>) :
-            (<CardTitle className="scroll pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+            </CardTitle>
+          ) : (
+            <CardTitle className="scroll pb-2 text-3xl font-semibold tracking-tight first:mt-0">
               Loading ...
-            </CardTitle>)
-          }
-          {noClass ?
-            (<>
+            </CardTitle>
+          )}
+          {noClass ? (
+            <>
               <CardDescription className="text-lg font-semibold">You have {noClass} lectures assigned today</CardDescription>
               <div className='flex justify-center mx-3 my-4'>
                 <ExtraClass updateSubjectCounts={updateSubjectCounts} />
               </div>
-            </>) :
-            (<CardDescription className="text-lg font-semibold">You don't have any lectures assigned today</CardDescription>)
-          }
+            </>
+          ) : (
+            <CardDescription className="text-lg font-semibold">You don't have any lectures assigned today</CardDescription>
+          )}
         </div>
         <CardContent>
           <div className="flex flex-col md:flex-row md:flex-wrap justify-between mx-5">
@@ -227,6 +230,9 @@ export default function displaySubject() {
                                 placeholder="no of attended"
                                 className="col-span-3"
                                 onChange={(e) => setEditedAttended(e.target.value)}
+                                type="number"
+                                min="0"
+                                required
                               />
                             </div>
                             <div className="grid grid-cols-4 items-center gap-4">
@@ -238,6 +244,9 @@ export default function displaySubject() {
                                 placeholder="no of missed"
                                 className="col-span-3"
                                 onChange={(e) => setEditedMissed(e.target.value)}
+                                type="number"
+                                min="0"
+                                required
                               />
                             </div>
                           </div>
@@ -246,6 +255,7 @@ export default function displaySubject() {
                           </DialogFooter>
                         </form>
                       </DialogContent>
+
                     </Dialog>
                   </CardTitle>
                   <CardDescription className="flex justify-between items-end">

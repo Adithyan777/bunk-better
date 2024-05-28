@@ -71,6 +71,15 @@ function InsertSubjects() {
 
     const subjectValues = subjects.filter(subject => subject.trim() !== '');
 
+    if (subjectValues.length === 0) {
+      toast({
+        title: "Validation Error",
+        description: "Please add at least one subject.",
+        delay: 3000
+      });
+      return;
+    }
+
     try {
       const response = await fetch(getFullUrl('/insertSubjects'), {
         method: isZero ? "POST" : "PUT",
